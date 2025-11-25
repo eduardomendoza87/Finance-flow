@@ -1,0 +1,43 @@
+/* src/index.css */
+@import "tailwindcss";
+
+/* Configuración del Tema Dark Futurista */
+@theme {
+  /* 1. Fuentes */
+  --font-sans: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-display: "Space Grotesk", sans-serif;
+
+  /* 2. Colores Personalizados (Zinc + Indigo) */
+  
+  /* Fondo y Superficies */
+  --color-background: #09090B;  /* Zinc 950 */
+  --color-surface: #18181B;     /* Zinc 900 */
+  --color-border: #27272A;      /* Zinc 800 */
+
+  /* Acción (Primary) */
+  --color-primary: #6366F1;       /* Indigo 500 */
+  --color-primary-hover: #4F46E5; /* Indigo 600 */
+
+  /* Texto */
+  --color-text-main: #FAFAFA;     /* Zinc 50 */
+  --color-text-muted: #A1A1AA;    /* Zinc 400 */
+
+  /* Semánticos */
+  --color-success: #10B981;       /* Emerald 500 */
+  --color-danger: #EF4444;        /* Red 500 */
+}
+
+/* Estilos Base para forzar el Dark Mode siempre */
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text-main);
+    font-family: var(--font-sans);
+  }
+
+  /* Títulos con la fuente futurista */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+}
