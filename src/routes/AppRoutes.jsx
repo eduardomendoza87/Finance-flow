@@ -6,6 +6,7 @@ import MainLayout from '../Layouts/MainLayout';
 
 // Pages
 import LandingPage from '../pages/LandingPage';
+import Login from '../pages/auth/Login';
 
 
 const AppRoutes = () => {
@@ -14,13 +15,9 @@ const AppRoutes = () => {
       {/* 1. RUTAS DE MARKETING (Con Navbar y Footer) */}
       <Route element={<LandingLayout />}>
         <Route path="/" element={<LandingPage />} />
-        {/* Aquí pondrías /terms, /privacy en el futuro */}
+        <Route path="/login" element={<Login/>} />
+         <Route path="/register" element={<div>Register Page</div>} />
       </Route>
-
-      {/* 2. RUTAS DE AUTH (Limpias, sin Layout o con uno centrado) */}
-      <Route path="/login" element={<div>Login Page</div>} />
-      <Route path="/register" element={<div>Register Page</div>} />
-
       {/* 3. RUTAS PRIVADAS (Con Sidebar) */}
       <Route element={<MainLayout />}>
         <Route path="/dashboard" element={<div>Dashboard</div>} />
