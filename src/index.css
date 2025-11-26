@@ -1,4 +1,4 @@
-/* src/index.css */
+
 @import "tailwindcss";
 
 /* Configuración del Tema Dark Futurista */
@@ -30,6 +30,10 @@
 
 /* Estilos Base para forzar el Dark Mode siempre */
 @layer base {
+ html {
+    scroll-behavior: smooth; 
+  }
+ 
   body {
     background-color: var(--color-background);
     color: var(--color-text-main);
