@@ -4,10 +4,13 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import LandingLayout from '../Layouts/LandingLayout'; 
 import MainLayout from '../Layouts/MainLayout';
 
-// Pages
+// Pages publicas
 import LandingPage from '../pages/LandingPage';
 import Login from '../pages/auth/Login';
 import Register from '../pages/auth/Register';
+
+//pages privadas
+import Home from '../pages/Home';
 
 
 const AppRoutes = () => {
@@ -21,7 +24,7 @@ const AppRoutes = () => {
       </Route>
       {/* 3. RUTAS PRIVADAS (Con Sidebar) */}
       <Route element={<MainLayout />}>
-        <Route path="/dashboard" element={<div>Dashboard</div>} />
+        <Route path="/dashboard" element={<Home/>} />
         {/* ... */}
       </Route>
 

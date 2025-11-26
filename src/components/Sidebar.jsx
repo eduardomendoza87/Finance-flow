@@ -39,7 +39,6 @@ className="cursor-pointer text-text-main"
 onClick={() => setOpen(!open)}
 /> </div>
 
-```
   {/* Items */}
   <ul className="flex-1 mt-3 space-y-1">
     {menuItems.map((item, index) => (
