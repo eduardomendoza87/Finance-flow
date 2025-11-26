@@ -78,7 +78,7 @@ export default function LandingNavbar() {
         </Link>
 
         <Link
-          to="/registro"
+          to="/register"
           className="
             flex items-center gap-2 px-5 py-2 rounded-lg
             bg-primary text-black

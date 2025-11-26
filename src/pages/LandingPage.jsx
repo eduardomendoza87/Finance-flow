@@ -65,13 +65,13 @@ const LandingPage = () => {
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
-                to="/registro"
+                to="/register"
                 className="px-8 py-3 rounded-lg bg-primary text-white font-medium hover:bg-primary-hover hover:scale-105  transition shadow-lg shadow-primary/25 text-center"
               >
                 Crear cuenta gratis
               </Link>
               <Link
-                to="/ver-demo"
+                to="/login"
                 className="px-8 py-3 rounded-lg border border-border text-text-main font-medium hover:bg-surface  hover:scale-105 transition text-center flex items-center justify-center gap-2"
               >
                 <BarChart3 size={18} /> Ver demo
@@ -328,7 +328,7 @@ const LandingPage = () => {
             Recupera el control hoy.
           </h3>
           <Link
-            to="/registro"
+            to="/register"
             className="inline-block px-10 py-4 rounded-xl bg-primary text-white font-bold text-lg hover:bg-primary-hover hover:scale-105 transition shadow-xl shadow-primary/30"
           >
             Crear cuenta en 30 segundos

@@ -7,6 +7,7 @@ import MainLayout from '../Layouts/MainLayout';
 // Pages
 import LandingPage from '../pages/LandingPage';
 import Login from '../pages/auth/Login';
+import Register from '../pages/auth/Register';
 
 
 const AppRoutes = () => {
@@ -16,7 +17,7 @@ const AppRoutes = () => {
       <Route element={<LandingLayout />}>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login/>} />
-         <Route path="/register" element={<div>Register Page</div>} />
+         <Route path="/register" element={<Register/>} />
       </Route>
       {/* 3. RUTAS PRIVADAS (Con Sidebar) */}
       <Route element={<MainLayout />}>
