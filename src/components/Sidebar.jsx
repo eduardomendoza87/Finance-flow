@@ -13,8 +13,8 @@ import logo from "../assets/logo_finance_flow.png";
 import { Link } from "react-router-dom";
 
 const menuItems = [
-{ icon: <Home size={20} />, label: "Inicio" },
-{ icon: <BarChart3 size={20} />, label: "Historial" },
+{ icon: <Home size={20} />, label: "Inicio" , Link:"/home" },
+{ icon: <BarChart3 size={20} />, label: "Historial", Link:"/historic" },
 { icon: <Target size={20} />, label: "Metas" },
 { icon: <LineChart size={20} />, label: "Insights" },
 ];
@@ -59,6 +59,8 @@ onClick={() => setOpen(!open)}
         >
           {item.label}
         </span>
+        <Link to={item.link}>
+        </Link>
       </li>
     ))}
   </ul>

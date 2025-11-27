@@ -12,6 +12,7 @@ import Register from '../pages/auth/Register';
 //pages privadas
 import Home from '../pages/Home';
 import RegisterMovement from '../components/forms/Registermovement';
+import TransactionHistory from '../pages/Historic';
 
 
 const AppRoutes = () => {
@@ -27,6 +28,7 @@ const AppRoutes = () => {
       <Route element={<MainLayout />}>
         <Route path="/dashboard" element={<Home/>} />
         <Route path='/register-movement' element={<RegisterMovement/>}/>
+        <Route path='/historic' element={<TransactionHistory/>} />
         {/* ... */}
       </Route>
 
