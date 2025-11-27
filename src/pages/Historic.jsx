@@ -26,7 +26,7 @@ const transaccionesData = [
     categoria: "💰 Nómina",
     descripcion: "Sueldo Quincena",
     mood: "🎉",
-    esencial: null, // null significa que es un ingreso (no aplica esencial)
+    esencial: null, 
     monto: 2500.0,
   },
 ];

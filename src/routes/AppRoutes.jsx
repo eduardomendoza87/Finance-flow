@@ -13,6 +13,9 @@ import Register from '../pages/auth/Register';
 import Home from '../pages/Home';
 import RegisterMovement from '../components/forms/Registermovement';
 import TransactionHistory from '../pages/Historic';
+import Goals from '../pages/Goals';
+import FormNewGoal from '../components/forms/NewGoal';
+import FormEditarGoal from '../components/forms/EditGoal';
 
 
 const AppRoutes = () => {
@@ -29,6 +32,9 @@ const AppRoutes = () => {
         <Route path="/dashboard" element={<Home/>} />
         <Route path='/register-movement' element={<RegisterMovement/>}/>
         <Route path='/historic' element={<TransactionHistory/>} />
+        <Route path='/goals' element={<Goals/>}/>
+        <Route path='/new-goal' element={<FormNewGoal/>}/>
+        <Route path='/edit-goal/:id' element={<FormEditarGoal/>}/>
         {/* ... */}
       </Route>
 
