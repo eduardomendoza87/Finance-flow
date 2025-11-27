@@ -11,20 +11,22 @@ import Register from '../pages/auth/Register';
 
 //pages privadas
 import Home from '../pages/Home';
+import RegisterMovement from '../components/forms/Registermovement';
 
 
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* 1. RUTAS DE MARKETING (Con Navbar y Footer) */}
+      {/* 1. RUTAS DE MARKETING  */}
       <Route element={<LandingLayout />}>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login/>} />
          <Route path="/register" element={<Register/>} />
       </Route>
-      {/* 3. RUTAS PRIVADAS (Con Sidebar) */}
+      {/* 3. RUTAS PRIVADAS  */}
       <Route element={<MainLayout />}>
         <Route path="/dashboard" element={<Home/>} />
+        <Route path='/register-movement' element={<RegisterMovement/>}/>
         {/* ... */}
       </Route>
 

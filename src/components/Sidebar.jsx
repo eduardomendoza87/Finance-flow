@@ -10,6 +10,7 @@ User,
 PlusCircle,
 } from "lucide-react";
 import logo from "../assets/logo_finance_flow.png";
+import { Link } from "react-router-dom";
 
 const menuItems = [
 { icon: <Home size={20} />, label: "Inicio" },
@@ -64,7 +65,7 @@ onClick={() => setOpen(!open)}
 
   {/* Botón Nuevo Gasto */}
   <div className="px-4 mb-4">
-    <button
+    <Link to="/register-movement"
       className={`
         flex items-center justify-center gap-2 w-full py-2 rounded-lg 
         bg-primary hover:bg-primary-hover transition
@@ -80,7 +81,7 @@ onClick={() => setOpen(!open)}
       >
         Nuevo gasto
       </span>
-    </button>
+    </Link>
   </div>
 
   {/* Footer */}
