@@ -11,9 +11,9 @@ import {
   PlusCircle,
   ChevronLeft
 } from "lucide-react";
-import logo from "../assets/logo_finance_flow.png"; // Ajusta la ruta si es necesario
+import logo from "../assets/logo_finance_flow.png";
 
-// 1. AGREGA LAS RUTAS AQUI
+// 1. Rutas
 const menuItems = [
   { icon: Home, label: "Inicio", path: "/dashboard" },
   { icon: BarChart3, label: "Historial", path: "/historic" },
@@ -94,7 +94,7 @@ export default function Sidebar() {
       {/* --- BOTÓN NUEVO GASTO --- */}
       <div className="px-3 mb-6">
         <Link 
-          to="/new-transaction" // Asegúrate de tener esta ruta definida
+          to="/register-movement"
           className={`
             flex items-center gap-3 px-3 py-3 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all group
             ${!open ? "justify-center" : ""}
@@ -112,10 +112,6 @@ export default function Sidebar() {
         <Link to="/settings" className="flex items-center gap-3 px-3 py-3 rounded-xl text-text-muted hover:bg-background hover:text-text-main transition-all">
             <Settings size={20} className="min-w-5" />
             <span className={`overflow-hidden transition-all ${open ? "w-auto opacity-100" : "w-0 opacity-0"}`}>Configuración</span>
-        </Link>
-        <Link to="/profile" className="flex items-center gap-3 px-3 py-3 rounded-xl text-text-muted hover:bg-background hover:text-text-main transition-all">
-            <User size={20} className="min-w-5" />
-            <span className={`overflow-hidden transition-all ${open ? "w-auto opacity-100" : "w-0 opacity-0"}`}>Perfil</span>
         </Link>
       </div>
     </nav>

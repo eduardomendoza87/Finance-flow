@@ -10,85 +10,83 @@ import {
   Edit2,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-
+// Asegúrate de que la ruta sea correcta según donde guardaste el archivo
+import FormAddFunds from "../components/forms/AddFunds"; 
 
 const metas = [
   {
     id: 1,
-
-    titulo: "Viaje a japón",
-
+    titulo: "Viaje a Japón",
     icono: <Plane size={40} className="text-primary" />,
-
     progreso: 50,
-
     mesesRestantes: 4,
   },
-
   {
     id: 2,
-
-    titulo: "Comprar iphone",
-
+    titulo: "Comprar iPhone",
     icono: <Smartphone size={40} className="text-primary" />,
-
     progreso: 40,
-
     mesesRestantes: 6,
   },
-
   {
     id: 3,
-
-    titulo: "Viaje a españa",
-
+    titulo: "Viaje a España",
     icono: <Plane size={40} className="text-primary" />,
-
     progreso: 70,
-
     mesesRestantes: 4,
   },
-
   {
     id: 4,
-
     titulo: "Comprar moto",
-
     icono: <Bike size={40} className="text-primary" />,
-
     progreso: 60,
-
     mesesRestantes: 5,
   },
 ];
 
 const Goals = () => {
-  //  Estado para saber qué menú está abierto (guarda el ID)
+  // Estado para el menú de 3 puntos
   const [activeMenu, setActiveMenu] = useState(null);
 
-  // Función para abrir/cerrar menú
+  // Estado para el Modal de Aportar (Guarda la meta seleccionada)
+  const [goalToFund, setGoalToFund] = useState(null);
+
   const toggleMenu = (id) => {
-    if (activeMenu === id) {
-      setActiveMenu(null); // Si ya está abierto, lo cierra
-    } else {
-      setActiveMenu(id); // Abre el nuevo
-    }
+    setActiveMenu(activeMenu === id ? null : id);
   };
 
-  //  Funciones Dummy para simular acciones
   const handleDelete = (id) => {
     console.log("Eliminar meta:", id);
     setActiveMenu(null);
   };
+
+  // Función que procesa el abono (viene del Modal)
+  const handleSaveFund = (amount) => {
+    console.log(`Abonando $${amount} a la meta: ${goalToFund?.titulo}`);
+    // AQUÍ IRÁ LA LÓGICA DE SUPABASE EN EL FUTURO
+    setGoalToFund(null); // Cierra el modal
+  };
+
   return (
     <div className="bg-background min-h-screen text-text-main font-sans pb-12">
-      {/*  Overlay invisible para cerrar menú al hacer clic fuera */}
+      
+      {/* --- 1. INTEGRACIÓN DEL MODAL --- */}
+      {/* Aquí es donde conectamos los cables */}
+      <FormAddFunds 
+        isOpen={!!goalToFund}            // Se abre si goalToFund tiene datos
+        onClose={() => setGoalToFund(null)} // Se cierra limpiando el estado
+        goalTitle={goalToFund?.titulo}   // Pasamos el título para el header del modal
+        onSave={handleSaveFund}          // Qué hacer cuando el usuario confirma
+      />
+
+      {/* Overlay invisible para cerrar menú al hacer clic fuera */}
       {activeMenu && (
         <div
           className="fixed inset-0 z-10"
           onClick={() => setActiveMenu(null)}
         />
       )}
+
       {/* HEADER & BÚSQUEDA */}
       <section className="px-6 py-8 md:px-12 lg:px-16">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-end gap-6">
@@ -104,7 +102,7 @@ const Goals = () => {
             </p>
           </div>
 
-          {/* Barra de búsqueda simplificada */}
+          {/* Barra de búsqueda */}
           <div className="relative w-full md:w-96 group">
             <Search
               size={18}
@@ -168,7 +166,7 @@ const Goals = () => {
                     <MoreVertical size={20} />
                   </button>
 
-                  {/* MENÚ DESPLEGABLE (Dropdown) */}
+                  {/* MENÚ DESPLEGABLE */}
                   {activeMenu === meta.id && (
                     <div className="absolute right-0 mt-2 w-40 bg-surface border border-border rounded-xl shadow-xl z-20 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
                       <Link
@@ -206,11 +204,15 @@ const Goals = () => {
                 </div>
               </div>
 
-              {/* Botones de Acción  */}
+              {/* Botones de Acción */}
               <div className="flex gap-3">
-                <button className="flex-1 py-2.5 rounded-lg bg-primary/10 text-primary font-medium hover:bg-primary hover:text-white transition border border-primary/20 flex justify-center items-center gap-2">
+                <button
+                  onClick={() => setGoalToFund(meta)} // <--- ESTO ABRE EL MODAL
+                  className="flex-1 py-2.5 rounded-lg bg-primary/10 text-primary font-medium hover:bg-primary hover:text-white transition border border-primary/20 flex justify-center items-center gap-2"
+                >
                   <Plus size={18} /> Abonar
                 </button>
+                {/* Botón secundario para editar rápido (Opcional, ya está en el menú) */}
                 <Link
                   to={`/edit-goal/${meta.id}`}
                   className="p-2.5 rounded-lg border border-border text-text-muted hover:text-text-main hover:bg-background transition"
@@ -224,8 +226,7 @@ const Goals = () => {
         </div>
       </section>
 
-      {/*Paginacion*/}
-
+      {/* Paginación */}
       <section className="px-6 py-8 md:px-12 lg:px-16">
         <div className="flex justify-center mt-6 gap-4">
           <button className="px-6 py-3 border border-dashed border-primary-hover text-text-muted rounded-xl shadow-md hover:shadow-primary hover:text-primary transition text-md font-medium">

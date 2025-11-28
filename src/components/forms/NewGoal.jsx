@@ -114,7 +114,7 @@ const FormNewGoal = () => {
             </div>
 
             {/* 4. MENSAJE INTELIGENTE (Cálculo) */}
-            <div className="flex items-center justify-center min-h-[3rem]">
+            <div className="flex items-center justify-center min-h-12">
                {monthlySaving && monthlySaving > 0 ? (
                  <p className="text-center text-sm text-text-muted bg-surface border border-border px-4 py-2 rounded-lg animate-in fade-in">
                     Para lograrlo a tiempo, necesitas ahorrar <span className="text-success font-bold font-mono">${monthlySaving.toFixed(2)}</span> al mes. 🚀

@@ -16,7 +16,9 @@ import TransactionHistory from '../pages/Historic';
 import Goals from '../pages/Goals';
 import FormNewGoal from '../components/forms/NewGoal';
 import FormEditarGoal from '../components/forms/EditGoal';
-
+import Insights from '../pages/Inshigths';
+import Settings from '../pages/Settings';
+import Profile from '../pages/sub/Profile';
 
 const AppRoutes = () => {
   return (
@@ -35,6 +37,9 @@ const AppRoutes = () => {
         <Route path='/goals' element={<Goals/>}/>
         <Route path='/new-goal' element={<FormNewGoal/>}/>
         <Route path='/edit-goal/:id' element={<FormEditarGoal/>}/>
+        <Route path='/insights' element={<Insights/>}/>
+        <Route path='/settings' element={<Settings/>}/>
+        <Route path='settings/profile' element={<Profile/>}/>
         {/* ... */}
       </Route>
 
