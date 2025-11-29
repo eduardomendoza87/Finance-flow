@@ -23,6 +23,8 @@ import FormEditProfile from '../components/forms/EditProfile';
 import Categories from '../pages/sub/Categories';
 import FormNewCategory from '../components/forms/Newcategory'; 
 import FormEditCategory from '../components/forms/EditCategory';
+import Preferences from '../pages/sub/Preferens';
+import SecurityAndAccount from '../pages/sub/SecurityAndAccount';
 
 
 const AppRoutes = () => {
@@ -49,7 +51,8 @@ const AppRoutes = () => {
         <Route path='/settings/categories' element={<Categories/>}/>
         <Route path="/settings/categories/new-category" element={<FormNewCategory />} />
         <Route path="/settings/categories/edit/:id" element={<FormEditCategory />} />
-        {/* ... */}
+        <Route path='/settings/preferences' element={<Preferences/>}/>
+        <Route path='/settings/security' element={<SecurityAndAccount/>}/>
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

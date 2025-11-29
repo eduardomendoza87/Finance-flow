@@ -30,7 +30,7 @@ const settingsOptions = [
     title: "Cuenta",
     description: "Gestiona tu cuenta y seguridad",
     icon: Shield,
-    path: "/settings/account",
+    path: "/settings/security",
   },
 ];
 
