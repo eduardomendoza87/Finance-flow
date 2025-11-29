@@ -19,6 +19,11 @@ import FormEditarGoal from '../components/forms/EditGoal';
 import Insights from '../pages/Inshigths';
 import Settings from '../pages/Settings';
 import Profile from '../pages/sub/Profile';
+import FormEditProfile from '../components/forms/EditProfile';
+import Categories from '../pages/sub/Categories';
+import FormNewCategory from '../components/forms/Newcategory'; 
+import FormEditCategory from '../components/forms/EditCategory';
+
 
 const AppRoutes = () => {
   return (
@@ -40,6 +45,10 @@ const AppRoutes = () => {
         <Route path='/insights' element={<Insights/>}/>
         <Route path='/settings' element={<Settings/>}/>
         <Route path='settings/profile' element={<Profile/>}/>
+        <Route path='/settings/profile/edit-perfil' element={<FormEditProfile/>}/>
+        <Route path='/settings/categories' element={<Categories/>}/>
+        <Route path="/settings/categories/new-category" element={<FormNewCategory />} />
+        <Route path="/settings/categories/edit/:id" element={<FormEditCategory />} />
         {/* ... */}
       </Route>
 
