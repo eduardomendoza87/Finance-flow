@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { 
-  X, Save, Check, Trash2,
+  X, Save, Check, Trash2, Loader2,
   ShoppingBasket, Bus, Utensils, Home, Gamepad2, 
   PiggyBank, ArrowDownCircle, CircleDot, Heart, 
   Zap, Briefcase, GraduationCap, Plane, Music, 
   Coffee, Gift, Dumbbell, Dog
 } from "lucide-react";
 
-//REUTILIZAMOS LAS MISMAS LISTAS 
+// Importamos los servicios reales
+import { getCategoryById, updateCategory, deleteCategory } from "../../services/categories";
+
+// LISTAS DE ICONOS Y COLORES 
 const availableIcons = [
   { id: "basket", component: ShoppingBasket },
   { id: "bus", component: Bus },
@@ -44,64 +47,106 @@ const FormEditCategory = () => {
   const navigate = useNavigate();
   const { id } = useParams(); 
   const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Estado del Formulario
   const [formData, setFormData] = useState({
     name: "",
     type: "expense",
-    iconId: "other",
+    iconId: "basket",
     colorId: "indigo"
   });
 
-  // 1. SIMULAR CARGA DE DATOS (FETCH)
+  //  CARGAR DATOS REALES DE LA BD
   useEffect(() => {
-    setTimeout(() => {
-      // Datos dummy que vendrían de la DB
-      setFormData({
-        name: "Comida",
-        type: "expense",
-        iconId: "food",
-        colorId: "rose"
-      });
-      setIsLoading(false);
-    }, 500);
-  }, [id]);
+    const loadCategory = async () => {
+      try {
+        const data = await getCategoryById(id);
+        
+        if (data) {
+          // Rellenamos el formulario con los datos que vienen de la DB
+          setFormData({
+            name: data.name,
+            type: data.type,
+            iconId: data.icon || "other", 
+            colorId: data.color || "indigo" 
+          });
+        }
+      } catch (error) {
+        console.error("Error al cargar categoría:", error);
+        alert("No se pudo cargar la categoría.");
+        navigate("/settings/categories");
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  // Helper para vista previa
+    loadCategory();
+  }, [id, navigate]);
+
+  // Helper para vista previa visual
   const SelectedIcon = availableIcons.find(i => i.id === formData.iconId)?.component || CircleDot;
   const selectedColorClass = availableColors.find(c => c.id === formData.colorId)?.value || "text-white";
 
-  const handleSubmit = (e) => {
+  // ACTUALIZAR 
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(`Actualizando categoría ${id}:`, formData);
-    navigate("/settings/categories");
+    setIsSaving(true);
+    try {
+      const updates = {
+        name: formData.name,
+        type: formData.type,
+        icon: formData.iconId, 
+        color: formData.colorId
+      };
+      
+      await updateCategory(id, updates);
+      console.log("Categoría actualizada");
+      navigate("/settings/categories"); 
+
+    } catch (error) {
+      console.error("Error al actualizar:", error);
+      alert("Error al guardar cambios.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
-  const handleDelete = () => {
-    if (window.confirm("¿Seguro que quieres eliminar esta categoría?")) {
-        console.log(`Eliminando categoría ${id}`);
-        navigate("/settings/categories");
+  // 3. ELIMINAR 
+  const handleDelete = async () => {
+    if (window.confirm("¿Seguro que quieres eliminar esta categoría? Se perderá la asociación con tus gastos pasados.")) {
+        setIsSaving(true);
+        try {
+            await deleteCategory(id);
+            navigate("/settings/categories");
+        } catch (error) {
+            console.error("Error al eliminar:", error);
+            alert("Hubo un problema al eliminar.");
+            setIsSaving(false);
+        }
     }
   };
 
   if (isLoading) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-            <div className="text-primary font-display text-xl animate-pulse">Cargando...</div>
+            <div className="flex flex-col items-center gap-2">
+                <Loader2 size={32} className="animate-spin text-primary" />
+                <div className="text-text-muted font-medium">Cargando datos...</div>
+            </div>
         </div>
     );
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/80 backdrop-blur-sm p-0 md:p-4">
+    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/80 backdrop-blur-sm p-0 md:p-4 animate-in fade-in duration-200">
       
-      {/* Modal Container */}
-      <div className="w-full max-w-lg bg-surface rounded-t-2xl md:rounded-2xl border-t md:border border-border shadow-2xl h-[95vh] md:h-auto flex flex-col animate-in slide-in-from-bottom-10 fade-in duration-300">
+      <div className="w-full max-w-lg bg-surface rounded-t-2xl md:rounded-2xl border-t md:border border-border shadow-2xl h-[95vh] md:h-auto flex flex-col">
         
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-border">
           <h2 className="text-xl font-bold font-display text-text-main">Editar Categoría</h2>
-          <button onClick={() => navigate(-1)} className="text-text-muted hover:text-white p-2 rounded-full hover:bg-background transition">
+          <button onClick={() => navigate("/settings/categories")} className="text-text-muted hover:text-white p-2 rounded-full hover:bg-background transition">
             <X size={24} />
           </button>
         </div>
@@ -110,7 +155,7 @@ const FormEditCategory = () => {
         <div className="flex-1 overflow-y-auto p-6 space-y-8">
           <form id="edit-category-form" onSubmit={handleSubmit} className="space-y-8">
             
-            {/* 1. NOMBRE E ICONO PREVIEW */}
+            {/* Nombre + Preview */}
             <div className="flex gap-4 items-end">
                 <div className="flex-1 space-y-2">
                     <label htmlFor="name" className="text-sm font-medium text-text-muted">Nombre</label>
@@ -124,16 +169,15 @@ const FormEditCategory = () => {
                     />
                 </div>
                 
-                {/* Preview Box */}
                 <div className="flex flex-col items-center justify-center gap-2 pb-1">
                     <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider">Vista previa</span>
-                    <div className="w-14 h-14 rounded-xl bg-background border border-border flex items-center justify-center shadow-lg">
+                    <div className="w-14 h-14 rounded-xl bg-background border border-border flex items-center justify-center shadow-lg transition-all duration-300">
                         <SelectedIcon size={28} className={selectedColorClass} />
                     </div>
                 </div>
             </div>
 
-            {/* 2. TIPO (GASTO / INGRESO) */}
+            {/* Tipo */}
             <div className="p-1 bg-background border border-border rounded-xl flex">
                 <button
                     type="button"
@@ -159,7 +203,7 @@ const FormEditCategory = () => {
                 </button>
             </div>
 
-            {/* 3. SELECTOR DE ICONOS (GRID) */}
+            {/* Selector de Iconos */}
             <div>
                 <label className="text-sm font-medium text-text-muted mb-3 block">Cambiar icono</label>
                 <div className="grid grid-cols-6 gap-3 p-4 bg-background/50 rounded-2xl border border-border h-48 overflow-y-auto custom-scrollbar">
@@ -186,7 +230,7 @@ const FormEditCategory = () => {
                 </div>
             </div>
 
-            {/* 4. SELECTOR DE COLOR */}
+            {/* Selector de Color */}
             <div>
                 <label className="text-sm font-medium text-text-muted mb-3 block">Cambiar color</label>
                 <div className="flex flex-wrap gap-4">
@@ -210,13 +254,14 @@ const FormEditCategory = () => {
           </form>
         </div>
 
-        {/* Footer (Con botón de Eliminar extra) */}
+        {/* Footer con Doble Acción */}
         <div className="p-6 border-t border-border bg-surface/50 backdrop-blur-md rounded-b-2xl flex flex-col sm:flex-row gap-3">
           
           <button 
             type="button" 
             onClick={handleDelete}
-            className="flex-1 sm:flex-none py-3 px-6 rounded-xl border border-danger/30 text-danger font-bold text-sm hover:bg-danger/10 transition-all flex items-center justify-center gap-2"
+            disabled={isSaving}
+            className="flex-1 sm:flex-none py-3 px-6 rounded-xl border border-danger/30 text-danger font-bold text-sm hover:bg-danger/10 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
           >
             <Trash2 size={18} /> Eliminar
           </button>
@@ -224,9 +269,10 @@ const FormEditCategory = () => {
           <button 
             type="submit" 
             form="edit-category-form"
-            className="flex-1 py-3 rounded-xl bg-primary text-white font-bold text-lg hover:bg-primary-hover transition-all shadow-xl shadow-primary/20 active:scale-95 flex items-center justify-center gap-2"
+            disabled={isSaving}
+            className="flex-1 py-3 rounded-xl bg-primary text-white font-bold text-lg hover:bg-primary-hover transition-all shadow-xl shadow-primary/20 active:scale-95 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-wait"
           >
-            <Save size={20} />
+            {isSaving ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
             Actualizar
           </button>
         </div>

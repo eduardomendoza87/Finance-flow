@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
-  X, Save, Check,
+  X, Save, Check, Loader2, 
   ShoppingBasket, Bus, Utensils, Home, Gamepad2, 
   PiggyBank, ArrowDownCircle, CircleDot, Heart, 
   Zap, Briefcase, GraduationCap, Plane, Music, 
   Coffee, Gift, Dumbbell, Dog
 } from "lucide-react";
 
-// 1. LISTA DE ICONOS DISPONIBLES
+// IMPORTACIONES DE BACKEND
+import { useAuth } from "../../context/AuthContext";
+import { createCategory } from "../../services/categories"; 
+
+// --- LISTAS ESTÁTICAS (Se mantienen igual) ---
 const availableIcons = [
   { id: "basket", component: ShoppingBasket },
   { id: "bus", component: Bus },
@@ -30,7 +34,6 @@ const availableIcons = [
   { id: "other", component: CircleDot },
 ];
 
-// 2. LISTA DE COLORES (Tailwind classes o Hex)
 const availableColors = [
   { id: "indigo", value: "text-indigo-500", bg: "bg-indigo-500" },
   { id: "emerald", value: "text-emerald-500", bg: "bg-emerald-500" },
@@ -43,29 +46,54 @@ const availableColors = [
 
 const FormNewCategory = () => {
   const navigate = useNavigate();
+  const { user } = useAuth(); // OBTENER USUARIO ACTUAL
   
-  // Estado del Formulario
+  const [isLoading, setIsLoading] = useState(false); // Estado de carga
+
   const [formData, setFormData] = useState({
     name: "",
-    type: "expense", // 'expense' | 'income'
+    type: "expense",
     iconId: "basket",
     colorId: "indigo"
   });
 
-  // Helper para obtener el componente de icono actual
   const SelectedIcon = availableIcons.find(i => i.id === formData.iconId)?.component || CircleDot;
   const selectedColorClass = availableColors.find(c => c.id === formData.colorId)?.value || "text-white";
 
-  const handleSubmit = (e) => {
+  //  FUNCIÓN DE GUARDADO CONECTADA A SUPABASE
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Categoría a guardar:", formData);
-    navigate("/settings/categories");
+    if (!user) return; 
+
+    setIsLoading(true); 
+
+    try {
+      const newCategory = {
+        name: formData.name,
+        type: formData.type,   
+        icon: formData.iconId, 
+        color: formData.colorId, 
+        user_id: user.id      
+      };
+
+      // Llamada al servicio
+      await createCategory(newCategory);
+      
+      // Si todo sale bien, volvemos a la lista
+      console.log("Categoría creada con éxito");
+      navigate("/settings/categories");
+
+    } catch (error) {
+      console.error("Error al crear categoría:", error);
+      alert("Hubo un error al guardar. Revisa la consola.");
+    } finally {
+      setIsLoading(false); 
+    }
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/80 backdrop-blur-sm p-0 md:p-4">
       
-      {/* Modal Container */}
       <div className="w-full max-w-lg bg-surface rounded-t-2xl md:rounded-2xl border-t md:border border-border shadow-2xl h-[95vh] md:h-auto flex flex-col animate-in slide-in-from-bottom-10 fade-in duration-300">
         
         {/* Header */}
@@ -76,11 +104,11 @@ const FormNewCategory = () => {
           </button>
         </div>
 
-        {/* Body Scrollable */}
+        {/* Body */}
         <div className="flex-1 overflow-y-auto p-6 space-y-8">
           <form id="category-form" onSubmit={handleSubmit} className="space-y-8">
             
-            {/* 1. NOMBRE E ICONO PREVIEW */}
+            {/* Nombre y Preview */}
             <div className="flex gap-4 items-end">
                 <div className="flex-1 space-y-2">
                     <label htmlFor="name" className="text-sm font-medium text-text-muted">¿Cómo se llama?</label>
@@ -96,16 +124,16 @@ const FormNewCategory = () => {
                     />
                 </div>
                 
-                {/* Preview Box */}
+                {/* Vista Previa */}
                 <div className="flex flex-col items-center justify-center gap-2 pb-1">
                     <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider">Vista previa</span>
-                    <div className="w-14 h-14 rounded-xl bg-background border border-border flex items-center justify-center shadow-lg">
+                    <div className="w-14 h-14 rounded-xl bg-background border border-border flex items-center justify-center shadow-lg transition-all duration-300">
                         <SelectedIcon size={28} className={selectedColorClass} />
                     </div>
                 </div>
             </div>
 
-            {/* 2. TIPO (GASTO / INGRESO) */}
+            {/* Tipo */}
             <div className="p-1 bg-background border border-border rounded-xl flex">
                 <button
                     type="button"
@@ -131,7 +159,7 @@ const FormNewCategory = () => {
                 </button>
             </div>
 
-            {/* 3. SELECTOR DE ICONOS (GRID) */}
+            {/* Iconos */}
             <div>
                 <label className="text-sm font-medium text-text-muted mb-3 block">Elige un icono</label>
                 <div className="grid grid-cols-6 gap-3 p-4 bg-background/50 rounded-2xl border border-border h-48 overflow-y-auto custom-scrollbar">
@@ -158,7 +186,7 @@ const FormNewCategory = () => {
                 </div>
             </div>
 
-            {/* 4. SELECTOR DE COLOR */}
+            {/* Colores */}
             <div>
                 <label className="text-sm font-medium text-text-muted mb-3 block">Elige un color</label>
                 <div className="flex flex-wrap gap-4">
@@ -187,10 +215,18 @@ const FormNewCategory = () => {
           <button 
             type="submit" 
             form="category-form"
-            className="w-full py-4 rounded-xl bg-primary text-white font-bold text-lg hover:bg-primary-hover transition-all shadow-xl shadow-primary/20 active:scale-95 flex items-center justify-center gap-2"
+            disabled={isLoading}
+            className="w-full py-4 rounded-xl bg-primary text-white font-bold text-lg hover:bg-primary-hover transition-all shadow-xl shadow-primary/20 active:scale-95 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            <Save size={20} />
-            Guardar Categoría
+            {isLoading ? (
+                <>
+                    <Loader2 size={20} className="animate-spin" /> Guardando...
+                </>
+            ) : (
+                <>
+                    <Save size={20} /> Guardar Categoría
+                </>
+            )}
           </button>
         </div>
 
